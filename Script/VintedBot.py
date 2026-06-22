@@ -13,7 +13,8 @@ from selenium.webdriver.support import expected_conditions as EC
 ###############################################################
 
 # 1. URL directa a la búsqueda ordenada por "Más recientes"
-URL_VINTED = "https://www.vinted.es/catalog?search_text=slam+dunk+kanzenban&order=newest_first"
+timestamp_actual = int(time.time())
+URL_VINTED = f"https://www.vinted.es/catalog?search_text=slam+dunk+kanzenban&order=newest_first&page=1&time={timestamp_actual}"
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ARCHIVO_HISTORIAL = os.path.join(BASE_DIR, "historial.txt")
 
