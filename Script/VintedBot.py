@@ -52,7 +52,6 @@ def ejecutar_revision():
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-    # Añadimos un user-agent estándar para evadir bloqueos básicos
     chrome_options.add_argument(
         "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36")
 
@@ -101,7 +100,6 @@ def ejecutar_revision():
             texto_post = post.get_text(separator=" | ", strip=True)
 
             # 4. ID Único y fiable: Extraemos el ID numérico del artículo de la propia URL de Vinted
-            # Ejemplo URL: /items/12345678-slam-dunk -> Nos quedamos con '12345678'
             post_id = enlace.split('/')[-1].split('-')[0]
 
             if post_id not in historial:
@@ -111,9 +109,9 @@ def ejecutar_revision():
 
                     # Formateamos el mensaje para Telegram
                     mensaje = (
-                        f"🏀 <b>¡Nueva oferta de Slam Dunk Kanzenban!</b>\n\n"
-                        f"📝 <i>Detalles:</i> {texto_post}\n\n"
-                        f"🔗 <a href='{enlace}'>Ir al artículo</a>"
+                        f" <b>¡Nueva oferta de Slam Dunk Kanzenban!</b>\n\n"
+                        f" <i>Detalles:</i> {texto_post}\n\n"
+                        f" <a href='{enlace}'>Ir al artículo</a>"
                     )
                     enviar_telegram(mensaje)
 
