@@ -2,20 +2,20 @@ name: Vigilante de Vinted
 
 on:
   schedule:
-    - cron: '13 * * * *' # Se ejecuta cada hora en el minuto 13
-  workflow_dispatch:      # Permite ejecutarlo manualmente desde la web
+    - cron: '13 * * * *'
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write    # Permite al script hacer "git push" del historial
+      contents: write
     steps:
       - name: Descargar código
-        uses: actions/checkout@v4 # Actualizado a la versión más reciente
+        uses: actions/checkout@v4
 
       - name: Instalar Python
-        uses: actions/setup-python@v5 # Actualizado a la versión más reciente
+        uses: actions/setup-python@v5
         with:
           python-version: '3.13'
 
@@ -30,7 +30,6 @@ jobs:
 
       - name: Ejecutar script
         env:
-          # Traemos los tokens de forma segura desde los Secrets de GitHub
           TOKEN_TELEGRAM: ${{ secrets.TOKEN_TELEGRAM }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
         run: |
