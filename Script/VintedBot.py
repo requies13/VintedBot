@@ -85,7 +85,10 @@ def ejecutar_revision():
 
         historial = cargar_historial()
         # 3. Las keywords DEBEN estar en minúscula para que el match funcione
-        keywords = ["slam dunk", "kanzenban", "kanzeban"]
+        keywords = ["slam dunk", "kanzenban", "kanzeban", "slamdunk"]
+
+        # Si el anuncio tiene alguna de estas palabras, el bot lo ignorará
+        palabras_prohibidas = ["vf", "français", "francais", "frances", "italiano", "ita", "portugues", "kana", "panini"]
 
         nuevos_encontrados = 0
         for post in todos_los_posts:
@@ -104,20 +107,27 @@ def ejecutar_revision():
             post_id = enlace.split('/')[-1].split('-')[0]
 
             if post_id not in historial:
-                # Comprobamos si coincide con las keywords
-                if any(key in texto_post.lower() for key in keywords):
-                    print(f"NUEVO ENCONTRADO: {texto_post}")
+                texto_lower = texto_post.lower()  # Lo pasamos a minúsculas una sola vez
 
-                    # Formateamos el mensaje para Telegram
-                    mensaje = (
-                        f" <b>¡Nueva oferta de Slam Dunk Kanzenban!</b>\n\n"
-                        f" <i>Detalles:</i> {texto_post}\n\n"
-                        f" <a href='{enlace}'>Ir al artículo</a>"
-                    )
-                    enviar_telegram(mensaje)
+                # Comprobamos si tiene las keywords de Slam Dunk
+                if any(key in texto_lower for key in keywords):
 
-                # Lo guardamos en el historial aunque no tenga las keywords exactas
-                # (para no volver a procesar otros mangas basura de la misma búsqueda)
+                    # AQUÍ ESTÁ LA MAGIA: Comprobamos que NO tenga palabras en otro idioma
+                    if not any(prohibida in texto_lower for prohibida in palabras_prohibidas):
+
+                        print(f"NUEVO ENCONTRADO: {texto_post}")
+
+                        # Formateamos el mensaje para Telegram
+                        mensaje = (
+                            f" <b>¡Nueva oferta de Slam Dunk Kanzenban!</b>\n\n"
+                            f" <i>Detalles:</i> {texto_post}\n\n"
+                            f" <a href='{enlace}'>Ir al artículo</a>"
+                        )
+                        enviar_telegram(mensaje)
+                    else:
+                        print(f"Descartado por idioma extranjero: {texto_post}")
+
+                # Lo guardamos en el historial siempre
                 guardar_en_historial(post_id)
                 historial.add(post_id)
                 nuevos_encontrados += 1
