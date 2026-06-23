@@ -14,7 +14,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 # 1. URL directa a la búsqueda ordenada por "Más recientes"
 timestamp_actual = int(time.time())
-URL_VINTED = f"https://www.vinted.es/catalog?search_text=slam+dunk+kanzenban&order=newest_first&page=1&time={timestamp_actual}"
+URL_VINTED = f"https://www.vinted.es/catalog?search_text=slam+dunk+kanzenban&catalog[]=2312&order=newest_first&page=1&time={timestamp_actual}"
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ARCHIVO_HISTORIAL = os.path.join(BASE_DIR, "historial.txt")
 
@@ -71,9 +71,15 @@ def ejecutar_revision():
         except:
             pass  # Si no salen, seguimos
 
-        # Scroll para cargar elementos perezosos (lazy loading)
-        browser.execute_script("window.scrollTo(0, document.body.scrollHeight/2);")
-        time.sleep(3)
+        # --- SCROLL MÚLTIPLE PARA CARGAR MÁS ARTÍCULOS ---
+        # El número 4 indica cuántas veces va a bajar la página.
+        num_scrolls = 4
+
+        for i in range(num_scrolls):
+            # Baja hasta el fondo de lo que hay cargado actualmente
+            browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            # Esperamos 2.5 segundos para que Vinted procese y cargue los siguientes
+            time.sleep(2.5)
 
         html = browser.page_source
         browser.quit()
@@ -88,7 +94,7 @@ def ejecutar_revision():
         keywords = ["slam dunk", "kanzenban", "kanzeban", "slamdunk"]
 
         # Si el anuncio tiene alguna de estas palabras, el bot lo ignorará
-        palabras_prohibidas = ["vf", "français", "francais", "frances", "italiano", "ita", "portugues", "kana", "panini"]
+        palabras_prohibidas = ["vf", "français", "francais", "frances", "italiano", "ita", "portugues", "kana", "panini", "française", "tome", "japonais", "jap" , "giapponese"]
 
         nuevos_encontrados = 0
         for post in todos_los_posts:
@@ -112,10 +118,8 @@ def ejecutar_revision():
                 # Comprobamos si tiene las keywords de Slam Dunk
                 if any(key in texto_lower for key in keywords):
 
-                    # AQUÍ ESTÁ LA MAGIA: Comprobamos que NO tenga palabras en otro idioma
+                    # Comprobamos que NO tenga palabras en otro idioma
                     if not any(prohibida in texto_lower for prohibida in palabras_prohibidas):
-
-                        print(f"NUEVO ENCONTRADO: {texto_post}")
 
                         # Formateamos el mensaje para Telegram
                         mensaje = (
@@ -124,16 +128,11 @@ def ejecutar_revision():
                             f" <a href='{enlace}'>Ir al artículo</a>"
                         )
                         enviar_telegram(mensaje)
-                    else:
-                        print(f"Descartado por idioma extranjero: {texto_post}")
 
                 # Lo guardamos en el historial siempre
                 guardar_en_historial(post_id)
                 historial.add(post_id)
                 nuevos_encontrados += 1
-
-        if nuevos_encontrados == 0:
-            print("No hay artículos nuevos.")
 
     except Exception as e:
         print(f"Error durante el scraping: {e}")
