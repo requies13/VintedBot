@@ -34,10 +34,16 @@ def guardar_en_historial(texto):
         f.write(texto + "\n")
 
 
-def enviar_telegram(mensaje):
-    url = f"https://api.telegram.org/bot{TOKEN_TELEGRAM}/sendMessage"
-    # Usamos HTML para que el mensaje quede formateado
-    payload = {"chat_id": CHAT_ID, "text": mensaje, "parse_mode": "HTML"}
+def enviar_telegram(mensaje, foto_url=None):
+    if foto_url:
+        url = f"https://api.telegram.org/bot{TOKEN_TELEGRAM}/sendPhoto"
+
+        payload = {"chat_id": CHAT_ID, "photo": foto_url, "caption": mensaje, "parse_mode": "HTML"}
+    else:
+        url = f"https://api.telegram.org/bot{TOKEN_TELEGRAM}/sendMessage"
+
+        payload = {"chat_id": CHAT_ID, "text": mensaje, "parse_mode": "HTML"}
+
     try:
         requests.post(url, json=payload)
     except Exception as e:
@@ -107,27 +113,28 @@ def ejecutar_revision():
             if not enlace.startswith('http'):
                 enlace = "https://www.vinted.es" + enlace
 
+            img_tag = post.find('img')
+            foto_url = img_tag['src'] if img_tag and 'src' in img_tag.attrs else None
+
             texto_post = post.get_text(separator=" | ", strip=True)
 
-            # 4. ID Único y fiable: Extraemos el ID numérico del artículo de la propia URL de Vinted
+            # 4. ID Único y fiable: Extraemos el ID numérico del artículo
             post_id = enlace.split('/')[-1].split('-')[0]
 
             if post_id not in historial:
-                texto_lower = texto_post.lower()  # Lo pasamos a minúsculas una sola vez
+                texto_lower = texto_post.lower()
 
                 # Comprobamos si tiene las keywords de Slam Dunk
                 if any(key in texto_lower for key in keywords):
 
                     # Comprobamos que NO tenga palabras en otro idioma
                     if not any(prohibida in texto_lower for prohibida in palabras_prohibidas):
-
-                        # Formateamos el mensaje para Telegram
                         mensaje = (
                             f" <b>¡Nueva oferta de Slam Dunk Kanzenban!</b>\n\n"
                             f" <i>Detalles:</i> {texto_post}\n\n"
                             f" <a href='{enlace}'>Ir al artículo</a>"
                         )
-                        enviar_telegram(mensaje)
+                        enviar_telegram(mensaje, foto_url)
 
                 # Lo guardamos en el historial siempre
                 guardar_en_historial(post_id)
