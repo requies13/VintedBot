@@ -14,7 +14,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 # 1. URL directa a la búsqueda ordenada por "Más recientes"
 timestamp_actual = int(time.time())
-URL_VINTED = f"https://www.vinted.es/catalog?search_text=slam+dunk+kanzenban&catalog[]=2312&order=newest_first&page=1&time={timestamp_actual}"
+URL_VINTED = f"https://www.vinted.es/catalog?search_text=slam+dunk+kanzenban&order=newest_first&page=1&time={timestamp_actual}"
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ARCHIVO_HISTORIAL = os.path.join(BASE_DIR, "historial.txt")
 
@@ -56,6 +56,7 @@ def enviar_telegram(mensaje, foto_url=None):
 
 def ejecutar_revision():
     chrome_options = Options()
+    chrome_options.add_argument("--window-size=1920,1080")
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
@@ -100,7 +101,12 @@ def ejecutar_revision():
         keywords = ["slam dunk", "kanzenban", "kanzeban", "slamdunk"]
 
         # Si el anuncio tiene alguna de estas palabras, el bot lo ignorará
-        palabras_prohibidas = ["vf", "français", "francais", "frances", "italiano", "ita", "portugues", "kana", "panini", "française", "tome", "japonais", "jap" , "giapponese"]
+        palabras_prohibidas = [
+            "vf", "français", "francais", "frances", "italiano", "ita", "portugues",
+            "kana", "panini", "française", "tome", "japonais", "jap", "giapponese",
+            "camiseta", "t-shirt", "sudadera", "chaqueta", "abrigo", "jersey",
+            "zapatillas", "sneakers", "figura", "poster", "talla", "ropa", "pantalon"
+        ]
 
         nuevos_encontrados = 0
         for post in todos_los_posts:
