@@ -13,7 +13,8 @@ from selenium.webdriver.support import expected_conditions as EC
 ###############################################################
 
 # 1. URL directa a la búsqueda ordenada por "Más recientes"
-URL_VINTED = f"https://www.vinted.es/catalog?search_text=slam+dunk+kanzenban&order=newest_first&page=1"
+timestamp_actual = int(time.time())
+URL_VINTED = f"https://www.vinted.es/catalog?search_text=slam+dunk+kanzenban&order=newest_first&page=1&time={timestamp_actual}"
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ARCHIVO_HISTORIAL = os.path.join(BASE_DIR, "historial.txt")
 
@@ -97,15 +98,27 @@ def ejecutar_revision():
 
         historial = cargar_historial()
         # 3. Las keywords DEBEN estar en minúscula para que el match funcione
-        keywords = ["slam dunk", "kanzenban", "kanzeban", "slamdunk", "manga"]
+        keywords = ["slam dunk", "kanzenban", "kanzeban", "slamdunk" , "slam dunk manga", "slamdunk manga"]
 
-        # Si el anuncio tiene alguna de estas palabras, el bot lo ignorará
+        # Si el anuncio tiene alguna de estas palabras, el bot lo ignorará# Filtro de idiomas + Anti-Merchandising/Ropa (Español e Inglés)
         palabras_prohibidas = [
-            "vf", "français", "francais", "frances", "italiano", "ita", "portugues",
-            "kana", "panini", "française", "tome", "japonais", "jap", "giapponese",
-            "camiseta", "t-shirt", "sudadera", "chaqueta", "abrigo", "jersey",
-            "zapatillas", "sneakers", "figura", "poster", "talla", "ropa", "pantalon"
-        ]
+    #             # 1. Idiomas y ediciones extranjeras
+             "vf", "français", "francais", "frances", "italiano", "ita", "portugues",
+             "kana", "panini", "française", "tome", "japonais", "jap", "giapponese",
+    #
+    #             # 2. Ropa en Español
+             "camiseta", "sudadera", "chaqueta", "abrigo", "jersey", "zapatillas",
+             "ropa", "pantalon", "chandal", "botas", "gorra", "disfraz", "cosplay",
+    #
+    #             # 3. Ropa en Inglés
+             "t-shirt", "shirt", "hoodie", "jacket", "sweater", "coat", "sneakers",
+             "sneaker", "shoes", "boots", "pants", "shorts", "jeans", "denim", "tracksuit",
+    #
+    #             # 4. Merchandising que no son libros
+             "figura", "poster", "peluche", "carta", "card", "sticker", "pegatina", "merch",
+    #
+    #             # 5. Tallas (Español e Inglés)
+             "talla", "size", "oversize", "xxl", "xxxl", " xs ", " xl ", "talla s", "talla m", "talla l", "size s", "size m", "size l"]
 
         nuevos_encontrados = 0
         for post in todos_los_posts:
