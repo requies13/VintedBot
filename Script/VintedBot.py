@@ -80,7 +80,7 @@ def ejecutar_revision():
 
         # --- SCROLL MÚLTIPLE PARA CARGAR MÁS ARTÍCULOS ---
         # El número 4 indica cuántas veces va a bajar la página.
-        num_scrolls = 30
+        num_scrolls = 4
 
         for i in range(num_scrolls):
             # Baja hasta el fondo de lo que hay cargado actualmente
