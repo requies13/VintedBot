@@ -80,7 +80,7 @@ def ejecutar_revision():
 
         # --- SCROLL MÚLTIPLE PARA CARGAR MÁS ARTÍCULOS ---
         # El número 4 indica cuántas veces va a bajar la página.
-        num_scrolls = 4
+        num_scrolls = 30
 
         for i in range(num_scrolls):
             # Baja hasta el fondo de lo que hay cargado actualmente
@@ -98,27 +98,30 @@ def ejecutar_revision():
 
         historial = cargar_historial()
         # 3. Las keywords DEBEN estar en minúscula para que el match funcione
-        keywords = ["slam dunk", "kanzenban", "kanzeban", "slamdunk" , "slam dunk manga", "slamdunk manga"]
+        keywords = ["slam dunk", "kanzenban", "kanzeban", "slamdunk" , "slam dunk manga", "slamdunk manga" ,"manga slam dunk", "mangas slam dunk"]
 
         # Si el anuncio tiene alguna de estas palabras, el bot lo ignorará# Filtro de idiomas + Anti-Merchandising/Ropa (Español e Inglés)
+        # Filtro de idiomas + Anti-Merchandising/Ropa (Español, Inglés y Francés)
         palabras_prohibidas = [
-    #             # 1. Idiomas y ediciones extranjeras
-             "vf", "français", "francais", "frances", "italiano", "ita", "portugues",
-             "kana", "panini", "française", "tome", "japonais", "jap", "giapponese",
-    #
-    #             # 2. Ropa en Español
-             "camiseta", "sudadera", "chaqueta", "abrigo", "jersey", "zapatillas",
-             "ropa", "pantalon", "chandal", "botas", "gorra", "disfraz", "cosplay",
-    #
-    #             # 3. Ropa en Inglés
-             "t-shirt", "shirt", "hoodie", "jacket", "sweater", "coat", "sneakers",
-             "sneaker", "shoes", "boots", "pants", "shorts", "jeans", "denim", "tracksuit",
-    #
-    #             # 4. Merchandising que no son libros
-             "figura", "poster", "peluche", "carta", "card", "sticker", "pegatina", "merch",
-    #
-    #             # 5. Tallas (Español e Inglés)
-             "talla", "size", "oversize", "xxl", "xxxl", " xs ", " xl ", "talla s", "talla m", "talla l", "size s", "size m", "size l"]
+            # 1. Idiomas y ediciones extranjeras
+            "vf", "français", "francais", "frances", "italiano", "ita", "portugues",
+            "kana", "panini", "française", "tome", "japonais", "jap", "giapponese",
+
+            # 2. Ropa en Español
+            "camiseta", "sudadera", "chaqueta", "abrigo", "jersey", "zapatillas",
+            "ropa", "pantalon", "chandal", "botas", "gorra", "disfraz", "cosplay",
+
+            # 3. Ropa en Inglés y Francés
+            "t-shirt", "shirt", "hoodie", "jacket", "sweater", "sweat", "coat", "sneakers",
+            "sneaker", "shoes", "boots", "pants", "shorts", "jeans", "denim", "tracksuit",
+
+            # 4. Merchandising que no son libros
+            "figura", "poster", "peluche", "carta", "card", "sticker", "pegatina", "merch",
+
+            # 5. Tallas (Español, Inglés y letras sueltas)
+            "talla", "size", "oversize", "xxl", "xxxl", " xs ", " s ", " m ", " l ", " xl ",
+            "talla s", "talla m", "talla l", "size s", "size m", "size l"
+        ]
 
         nuevos_encontrados = 0
         for post in todos_los_posts:
