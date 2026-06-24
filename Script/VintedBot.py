@@ -13,8 +13,7 @@ from selenium.webdriver.support import expected_conditions as EC
 ###############################################################
 
 # 1. URL directa a la búsqueda ordenada por "Más recientes"
-timestamp_actual = int(time.time())
-URL_VINTED = f"https://www.vinted.es/catalog?search_text=slam+dunk+kanzenban&order=newest_first&page=1&time={timestamp_actual}"
+URL_VINTED = f"https://www.vinted.es/catalog?search_text=slam+dunk+kanzenban&order=newest_first&page=1"
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ARCHIVO_HISTORIAL = os.path.join(BASE_DIR, "historial.txt")
 
@@ -98,7 +97,7 @@ def ejecutar_revision():
 
         historial = cargar_historial()
         # 3. Las keywords DEBEN estar en minúscula para que el match funcione
-        keywords = ["slam dunk", "kanzenban", "kanzeban", "slamdunk"]
+        keywords = ["slam dunk", "kanzenban", "kanzeban", "slamdunk", "manga"]
 
         # Si el anuncio tiene alguna de estas palabras, el bot lo ignorará
         palabras_prohibidas = [
