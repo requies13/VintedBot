@@ -2,7 +2,7 @@ name: Vigilante de Vinted
 
 on:
   schedule:
-    - cron: '13 * * * *'
+    - cron: '* * * 1 *'
   workflow_dispatch:
 
 jobs:
